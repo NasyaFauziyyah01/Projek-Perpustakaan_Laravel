@@ -3,7 +3,7 @@
     "builds": [
         {
             "src": "api/index.php",
-            "use": "@vercel/php@0.6.2"
+            "use": "vercel-php@0.6.2"
         },
         {
             "src": "public/**",
@@ -21,6 +21,9 @@
         }
     ],
     "env": {
-        "APP_ENV": "production"
+        "APP_ENV": "production",
+        "APP_DEBUG": "true",
+        "APP_URL": "https://projek-perpustakaan-laravel.vercel.app",
+        "ASSET_URL": "https://projek-perpustakaan-laravel.vercel.app"
     }
 }
