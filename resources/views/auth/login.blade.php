@@ -60,15 +60,18 @@
                 @enderror
             </div>
 
-            {{-- Ingat Saya --}}
-            <div class="mb-4">
-                <div class="form-check">
+            {{-- Ingat Saya & Lupa Password --}}
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check mb-0">
                     <input type="checkbox" class="form-check-input" id="remember" name="remember"
                            {{ old('remember') ? 'checked' : '' }}>
                     <label class="form-check-label" for="remember" style="font-size: 0.88rem;">
                         Ingat saya
                     </label>
                 </div>
+                <a href="{{ route('password.request') }}" class="fw-semibold text-decoration-none" style="font-size: 0.86rem; color: var(--green-800);">
+                    Lupa password?
+                </a>
             </div>
 
             {{-- Tombol Masuk --}}

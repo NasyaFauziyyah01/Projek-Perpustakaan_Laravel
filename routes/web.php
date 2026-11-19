@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\PeminjamanController;
 use App\Http\Controllers\AnggotaPeminjamanController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\ProfilController;
@@ -38,6 +39,16 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+
+    // Lupa Password (OTP via Email)
+    Route::get('/lupa-password', [ForgotPasswordController::class, 'showForgotForm'])->name('password.request');
+    Route::post('/lupa-password', [ForgotPasswordController::class, 'sendOtp'])
+        ->middleware('throttle:5,1')
+        ->name('password.otp.send');
+    Route::get('/reset-password', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset.form');
+    Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])
+        ->middleware('throttle:10,1')
+        ->name('password.reset.update');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
