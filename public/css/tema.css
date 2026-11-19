@@ -4513,6 +4513,266 @@ a.footer-contact-value:hover {
     border-top-color: rgba(212, 162, 76, 0.2);
 }
 
+/* ==========================================================================
+   MOBILE & RESPONSIVE POLISH (ANTI-NUMPUK DI LAYAR HP 320px - 768px)
+   ========================================================================== */
+@media (max-width: 991.98px) {
+    /* Navbar Collapse Mobile */
+    .navbar-perpus .navbar-collapse {
+        margin-top: 0.75rem;
+        padding: 0.85rem 1rem;
+        border-radius: 16px;
+        background: var(--putih);
+        border: 1px solid rgba(212, 162, 76, 0.25);
+        box-shadow: 0 12px 28px rgba(13, 28, 23, 0.12);
+    }
+
+    [data-theme="dark"] .navbar-perpus .navbar-collapse {
+        background: #132620;
+        border-color: rgba(212, 162, 76, 0.25);
+    }
+
+    .navbar-perpus .nav-pill-dock {
+        gap: 0.35rem;
+        margin-bottom: 0.75rem !important;
+    }
+
+    .navbar-perpus .nav-link {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 0.55rem 0.9rem !important;
+    }
+
+    .navbar-perpus .navbar-nav:last-child {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        padding-top: 0.65rem;
+        border-top: 1px dashed rgba(212, 162, 76, 0.3);
+    }
+
+    .navbar-perpus .navbar-nav:last-child .nav-item {
+        margin-bottom: 0 !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    /* Stat Luxury Dock: Baris 1 = 2 kolom angka, Baris 2 & 3 = full width agar Jam & Tanggal tidak numpuk */
+    .stat-ribbon-wrapper {
+        margin-top: -1.5rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 6;
+    }
+
+    .stat-luxury-dock {
+        border-radius: 20px;
+        padding: 0.75rem 0.85rem;
+    }
+
+    .stat-dock-col {
+        justify-content: flex-start;
+        padding: 0.55rem 0.5rem;
+    }
+
+    .stat-dock-col:nth-child(3),
+    .stat-dock-col:nth-child(4) {
+        flex: 0 0 100%;
+        max-width: 100%;
+        border-top: 1px solid rgba(240, 198, 116, 0.16);
+        padding-top: 0.65rem;
+    }
+
+    .stat-dock-col:nth-child(2) {
+        border-left: 1px solid rgba(240, 198, 116, 0.16);
+        padding-left: 0.75rem;
+    }
+
+    .stat-dock-item {
+        gap: 0.6rem;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .stat-dock-ring {
+        width: 34px;
+        height: 34px;
+        font-size: 0.95rem;
+        border-radius: 10px;
+    }
+
+    .stat-dock-val {
+        font-size: 1.1rem;
+    }
+
+    .stat-dock-clock {
+        font-size: 0.95rem;
+    }
+
+    .stat-dock-date {
+        font-size: 0.85rem;
+        white-space: normal;
+    }
+
+    .stat-dock-lbl {
+        font-size: 0.62rem;
+        white-space: normal;
+        line-height: 1.25;
+    }
+
+    /* Section Header (Buku Terbaru / Populer + Lihat Semua) */
+    .section-buku-terbaru .d-flex.justify-content-between,
+    .section-buku-populer .d-flex.justify-content-between {
+        gap: 0.75rem;
+        align-items: center !important;
+    }
+
+    .section-buku-terbaru .btn-outline-hijau,
+    .section-buku-populer .btn-outline-hijau {
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin-top: 0 !important;
+        padding: 0.35rem 0.75rem;
+        font-size: 0.78rem;
+    }
+
+    .section-title {
+        font-size: 1.45rem;
+    }
+
+    .section-subtitle {
+        font-size: 0.84rem;
+    }
+
+    /* CTA Card Mobile */
+    .cta-luxury-card {
+        padding: 1.75rem 1.25rem;
+        border-radius: 22px;
+    }
+
+    .cta-luxury-title {
+        font-size: 1.4rem;
+    }
+
+    .cta-luxury-desc {
+        font-size: 0.88rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    /* Hero Mobile */
+    .hero-section {
+        padding: 2.5rem 0 3.25rem;
+        border-radius: 0 0 24px 24px;
+    }
+
+    .hero-title {
+        font-size: 1.85rem !important;
+        line-height: 1.22;
+    }
+
+    .hero-desc {
+        font-size: 0.88rem;
+    }
+
+    /* Search Bar di Hero tidak meluber / patah baris */
+    .search-hero-box {
+        padding: 4px !important;
+    }
+
+    .search-hero-box input.form-control {
+        padding-left: 0.9rem !important;
+        padding-right: 0.5rem !important;
+        font-size: 0.84rem !important;
+        min-width: 0;
+    }
+
+    .search-hero-box .btn-emas-search {
+        padding: 0.45rem 0.95rem !important;
+        font-size: 0.82rem !important;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* Brand Navbar lebih ringkas di HP kecil */
+    .navbar-perpus .brand-logo-wrap {
+        width: 34px;
+        height: 34px;
+    }
+
+    .navbar-perpus .brand-title {
+        font-size: 1.12rem;
+    }
+
+    .navbar-perpus .brand-subtitle {
+        font-size: 0.62rem;
+        letter-spacing: 0.22em;
+    }
+
+    /* Grid Buku & Katalog Mobile: gutter lebih rapat agar kartu buku lebih lega */
+    .books-grid-row {
+        --bs-gutter-x: 0.75rem;
+        --bs-gutter-y: 0.85rem;
+    }
+
+    .katalog-grid {
+        gap: 0.75rem !important;
+    }
+
+    .book-card {
+        border-radius: 14px;
+    }
+
+    .book-card .card-body {
+        padding: 0.6rem 0.65rem 0.7rem;
+    }
+
+    .book-meta-top {
+        gap: 4px;
+        margin-bottom: 0.35rem;
+    }
+
+    .book-category-pill {
+        font-size: 0.55rem;
+        padding: 2px 5px;
+        max-width: 60%;
+    }
+
+    .book-year-tag {
+        font-size: 0.62rem;
+    }
+
+    .book-stock-badge-wrap {
+        top: 12px;
+        right: 12px;
+    }
+
+    .book-stock-pill {
+        font-size: 0.6rem;
+        padding: 2px 7px;
+    }
+
+    .book-card .book-actions {
+        gap: 5px;
+        padding-top: 8px;
+    }
+
+    .btn-book-action {
+        height: 30px;
+        min-height: 30px;
+        font-size: 0.68rem;
+        gap: 3px;
+        padding: 0 0.35rem;
+        border-radius: 8px;
+    }
+
+    /* Mencegah overflow horizontal di seluruh halaman */
+    html, body {
+        overflow-x: hidden;
+    }
+}
+
 
 
 

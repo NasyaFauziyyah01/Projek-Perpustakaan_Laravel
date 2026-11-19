@@ -22,7 +22,7 @@
     <link rel="icon" type="image/png" href="{{ asset('images/logo-lentera-icon.png') }}">
 
     {{-- Tema Perpustakaan (variabel warna) --}}
-    <link href="{{ asset('css/tema.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/tema.css') }}?v={{ filemtime(public_path('css/tema.css')) }}" rel="stylesheet">
 
     {{-- Inisialisasi Mode Gelap (Cegah kedipan layar / FOUC) --}}
     <script>
