@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules\Password;
@@ -52,11 +53,45 @@ class ForgotPasswordController extends Controller
         );
 
         try {
-            Mail::to($user->email)->send(new ResetPasswordOtpMail(
-                userName: $user->name,
-                otp: $otp,
-                expiresInMinutes: self::OTP_EXPIRY_MINUTES,
-            ));
+            $brevoApiKey = config('services.brevo.key');
+
+            if (! empty($brevoApiKey)) {
+                $htmlContent = view('emails.reset-password-otp', [
+                    'userName' => $user->name,
+                    'otp' => $otp,
+                    'expiresInMinutes' => self::OTP_EXPIRY_MINUTES,
+                ])->render();
+
+                $response = Http::timeout(10)
+                    ->withHeaders([
+                        'api-key' => $brevoApiKey,
+                        'accept' => 'application/json',
+                    ])
+                    ->post('https://api.brevo.com/v3/smtp/email', [
+                        'sender' => [
+                            'name' => config('mail.from.name', 'Lentera Pustaka'),
+                            'email' => config('mail.from.address'),
+                        ],
+                        'to' => [
+                            [
+                                'email' => $user->email,
+                                'name' => $user->name,
+                            ],
+                        ],
+                        'subject' => 'Kode OTP Reset Password — Lentera Pustaka',
+                        'htmlContent' => $htmlContent,
+                    ]);
+
+                if (! $response->successful()) {
+                    throw new \RuntimeException('Brevo API error: '.$response->status().' '.$response->body());
+                }
+            } else {
+                Mail::to($user->email)->send(new ResetPasswordOtpMail(
+                    userName: $user->name,
+                    otp: $otp,
+                    expiresInMinutes: self::OTP_EXPIRY_MINUTES,
+                ));
+            }
         } catch (\Throwable $e) {
             Log::error('Gagal mengirim email OTP reset password', [
                 'email' => $user->email,
@@ -65,7 +100,7 @@ class ForgotPasswordController extends Controller
 
             return back()
                 ->withInput()
-                ->with('error', 'Gagal mengirim email OTP. Pastikan konfigurasi SMTP email server sudah benar.');
+                ->with('error', 'Gagal mengirim email OTP. Pastikan konfigurasi email server (Brevo API / SMTP) sudah benar.');
         }
 
         session(['reset_email' => $user->email]);

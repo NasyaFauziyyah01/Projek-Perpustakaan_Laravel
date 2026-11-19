@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
@@ -60,6 +61,34 @@ class ForgotPasswordOtpTest extends TestCase
         $this->assertDatabaseHas('password_reset_tokens', [
             'email' => 'siswa@gmail.com',
         ]);
+    }
+
+    public function test_kirim_otp_via_brevo_http_api_jika_api_key_tersedia(): void
+    {
+        config(['services.brevo.key' => 'xkeysib-test-key']);
+        config(['mail.from.address' => 'pengirim@gmail.com']);
+        config(['mail.from.name' => 'Lentera Pustaka']);
+
+        Http::fake([
+            'https://api.brevo.com/v3/smtp/email' => Http::response(['messageId' => '<test@brevo>'], 201),
+        ]);
+
+        $user = User::factory()->create([
+            'name' => 'Budi Santoso',
+            'email' => 'budi@gmail.com',
+        ]);
+
+        $response = $this->post(route('password.otp.send'), [
+            'email' => $user->email,
+        ]);
+
+        $response->assertRedirect(route('password.reset.form'));
+        Http::assertSent(function ($request) use ($user) {
+            return $request->url() === 'https://api.brevo.com/v3/smtp/email'
+                && $request->hasHeader('api-key', 'xkeysib-test-key')
+                && $request['to'][0]['email'] === $user->email
+                && str_contains($request['htmlContent'], 'Budi Santoso');
+        });
     }
 
     public function test_kirim_otp_ditolak_jika_email_tidak_terdaftar(): void
