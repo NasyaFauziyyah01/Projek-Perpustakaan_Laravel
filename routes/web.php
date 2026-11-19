@@ -28,6 +28,12 @@ Route::get('/', [BerandaController::class, 'index'])->name('beranda');
 Route::get('/katalog', [KatalogController::class, 'index'])->name('katalog.index');
 Route::get('/katalog/{book}', [KatalogController::class, 'show'])->name('katalog.show');
 Route::post('/katalog/{book}/pinjam', [KatalogController::class, 'pinjam'])->name('katalog.pinjam');
+Route::post('/katalog/{book}/ulasan', [KatalogController::class, 'simpanUlasan'])
+    ->middleware('auth')
+    ->name('katalog.ulasan.simpan');
+Route::delete('/katalog/{book}/ulasan/{review}', [KatalogController::class, 'hapusUlasan'])
+    ->middleware('auth')
+    ->name('katalog.ulasan.hapus');
 
 /*
 |--------------------------------------------------------------------------

@@ -85,6 +85,17 @@ class User extends Authenticatable
     }
 
     /**
+     * Nomor Kartu Anggota / Petugas Digital unik (contoh: LP-2026-0001).
+     */
+    public function getNomorAnggota(): string
+    {
+        $year = $this->created_at ? $this->created_at->format('Y') : date('Y');
+        $prefix = $this->isAdmin() ? 'LP-ADM' : 'LP-AGT';
+
+        return sprintf('%s-%s-%04d', $prefix, $year, (int) $this->id);
+    }
+
+    /**
      * Cek apakah akun aktif.
      */
     public function isAktif(): bool
@@ -98,5 +109,13 @@ class User extends Authenticatable
     public function loans()
     {
         return $this->hasMany(Loan::class);
+    }
+
+    /**
+     * Relasi ke ulasan buku.
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

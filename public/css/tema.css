@@ -4773,6 +4773,557 @@ a.footer-contact-value:hover {
     }
 }
 
+/* ==========================================================================
+   KARTU ANGGOTA / PETUGAS DIGITAL (EMERALD-GOLD LUXURY LIBRARY CARD)
+   ========================================================================== */
+.member-id-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    padding: 1.4rem 1.6rem;
+    background: linear-gradient(135deg, #0D1F19 0%, #19382E 52%, #244F42 100%);
+    border: 1.5px solid rgba(240, 198, 116, 0.48);
+    box-shadow:
+        0 20px 44px rgba(13, 28, 23, 0.26),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    color: #FDFBF6;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
+
+.member-id-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 26px 52px rgba(13, 28, 23, 0.34),
+        0 0 24px rgba(212, 162, 76, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.member-card-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(48px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.member-glow-gold {
+    width: 220px;
+    height: 220px;
+    top: -80px;
+    right: -40px;
+    background: radial-gradient(circle, rgba(240, 198, 116, 0.28) 0%, transparent 70%);
+}
+
+.member-glow-emerald {
+    width: 200px;
+    height: 200px;
+    bottom: -90px;
+    left: -50px;
+    background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, transparent 70%);
+}
+
+.member-card-ring {
+    position: absolute;
+    width: 240px;
+    height: 240px;
+    right: -70px;
+    bottom: -90px;
+    border-radius: 50%;
+    border: 1px dashed rgba(240, 198, 116, 0.18);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.member-card-shimmer {
+    position: absolute;
+    top: 0;
+    left: -130%;
+    width: 65%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 248, 225, 0.07) 50%,
+        transparent 100%
+    );
+    transform: skewX(-24deg);
+    animation: dockShimmerSweep 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.member-card-header,
+.member-card-body,
+.member-card-footer {
+    position: relative;
+    z-index: 2;
+}
+
+.member-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(240, 198, 116, 0.22);
+}
+
+.member-card-logo {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: rgba(253, 251, 246, 0.1);
+    border: 1px solid rgba(240, 198, 116, 0.42);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    flex-shrink: 0;
+}
+
+.member-card-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.member-card-brand {
+    font-family: var(--font-isi);
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: #FFFFFF;
+    line-height: 1.15;
+}
+
+.member-card-brand span {
+    color: var(--gold-300);
+}
+
+.member-card-type {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(253, 251, 246, 0.72);
+    margin-top: 2px;
+}
+
+.member-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.member-status-pill.is-active {
+    background: rgba(52, 211, 153, 0.16);
+    border: 1px solid rgba(52, 211, 153, 0.48);
+    color: #6EE7B7;
+}
+
+.member-status-pill.is-inactive {
+    background: rgba(248, 113, 113, 0.16);
+    border: 1px solid rgba(248, 113, 113, 0.48);
+    color: #FCA5A5;
+}
+
+.member-status-pill .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 6px currentColor;
+}
+
+.member-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 0;
+}
+
+.member-identity-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.member-avatar-ring {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #F0C674 0%, #C6933A 100%);
+    padding: 2.5px;
+    flex-shrink: 0;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+}
+
+.member-avatar-ring span {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #132A22;
+    color: #FFE9B8;
+    font-family: var(--font-judul);
+    font-size: 1.55rem;
+    font-weight: 800;
+    align-items: center;
+    justify-content: center;
+}
+
+.member-main-info {
+    min-width: 0;
+}
+
+.member-number-badge {
+    display: inline-block;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #FFE9B8;
+    background: rgba(212, 162, 76, 0.18);
+    border: 1px solid rgba(240, 198, 116, 0.38);
+    padding: 2px 9px;
+    border-radius: 6px;
+    margin-bottom: 0.35rem;
+}
+
+.member-name {
+    font-family: var(--font-judul);
+    font-size: 1.28rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 0 0 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.member-email {
+    font-size: 0.78rem;
+    color: rgba(253, 251, 246, 0.75);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.member-qr-box {
+    background: #FDFBF6;
+    border: 2px solid var(--gold-400);
+    border-radius: 14px;
+    padding: 6px 6px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+}
+
+.member-qr-box img {
+    display: block;
+    border-radius: 6px;
+}
+
+.member-qr-fallback {
+    width: 74px;
+    height: 74px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.6rem;
+    color: #162E27;
+}
+
+.member-qr-caption {
+    font-size: 0.52rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    color: #162E27;
+    margin-top: 3px;
+}
+
+.member-card-footer {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    background: rgba(10, 22, 18, 0.42);
+    border: 1px solid rgba(240, 198, 116, 0.22);
+    border-radius: 14px;
+    padding: 0.75rem 1rem;
+}
+
+.member-meta-item {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.member-meta-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gold-300);
+    margin-bottom: 2px;
+}
+
+.member-meta-value {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 575.98px) {
+    .member-id-card {
+        padding: 1.1rem 1.1rem;
+        border-radius: 18px;
+    }
+
+    .member-avatar-ring {
+        width: 50px;
+        height: 50px;
+    }
+
+    .member-avatar-ring span {
+        font-size: 1.25rem;
+    }
+
+    .member-name {
+        font-size: 1.05rem;
+        white-space: normal;
+    }
+
+    .member-qr-box img,
+    .member-qr-fallback {
+        width: 60px;
+        height: 60px;
+    }
+
+    .member-card-footer {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65rem;
+        padding: 0.65rem 0.8rem;
+    }
+}
+
+@media print {
+    .navbar-perpus,
+    .footer-perpus,
+    .footer-custom,
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: #FFFFFF !important;
+    }
+
+    .member-id-card {
+        max-width: 540px;
+        margin: 2rem auto !important;
+        box-shadow: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+
+/* ==========================================================================
+   ULASAN & RATING BUKU (INTERACTIVE STAR PICKER & REVIEW CARDS)
+   ========================================================================== */
+.review-summary-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.42rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(212, 162, 76, 0.14);
+    border: 1px solid rgba(212, 162, 76, 0.38);
+    color: var(--green-900);
+    font-size: 0.88rem;
+    transition: var(--transisi-cepat);
+}
+
+.review-summary-pill:hover {
+    background: rgba(212, 162, 76, 0.24);
+    transform: translateY(-1px);
+    color: var(--green-950);
+}
+
+.review-box-card,
+.review-item-card,
+.review-empty-card {
+    background: var(--putih);
+    border: 1px solid var(--cream-200);
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(13, 28, 23, 0.05);
+}
+
+.review-item-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.review-item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(13, 28, 23, 0.08);
+    border-color: rgba(212, 162, 76, 0.45);
+}
+
+.review-score-badge {
+    background: linear-gradient(135deg, #162E27 0%, #275347 100%);
+    border: 1px solid rgba(240, 198, 116, 0.45);
+    border-radius: 16px;
+    padding: 0.55rem 0.95rem;
+    color: #FDFBF6;
+    min-width: 96px;
+}
+
+.review-score-badge .score-num {
+    font-family: var(--font-judul);
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: #FFE9B8;
+    line-height: 1.1;
+}
+
+.review-score-badge .score-stars {
+    color: #F0C674;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    margin: 2px 0;
+}
+
+.review-score-badge small {
+    font-size: 0.68rem;
+    color: rgba(253, 251, 246, 0.78);
+    display: block;
+}
+
+/* Interactive 5-Star Rating Picker (Row-Reverse CSS Trick) */
+.star-rating-picker {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 6px;
+    background: rgba(212, 162, 76, 0.08);
+    border: 1px solid rgba(212, 162, 76, 0.28);
+    padding: 0.45rem 0.85rem;
+    border-radius: 12px;
+}
+
+.star-rating-picker input {
+    display: none;
+}
+
+.star-rating-picker label {
+    cursor: pointer;
+    font-size: 1.55rem;
+    color: #D1D5DB;
+    transition: color 0.18s ease, transform 0.18s ease;
+    line-height: 1;
+}
+
+.star-rating-picker label:hover,
+.star-rating-picker label:hover ~ label,
+.star-rating-picker input:checked ~ label {
+    color: #EAB308;
+}
+
+.star-rating-picker label:hover {
+    transform: scale(1.16);
+}
+
+.review-info-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    background: rgba(47, 93, 80, 0.06);
+    border: 1px dashed rgba(47, 93, 80, 0.28);
+    border-radius: 14px;
+    padding: 1rem;
+    color: var(--green-900);
+}
+
+.review-info-notice i {
+    color: var(--gold-600);
+    line-height: 1.2;
+}
+
+.review-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--gradient-green);
+    color: #FFE9B8;
+    font-weight: 700;
+    font-size: 0.92rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(240, 198, 116, 0.45);
+}
+
+.review-item-stars {
+    color: #EAB308;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.review-empty-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(212, 162, 76, 0.14);
+    color: var(--gold-600);
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-theme="dark"] .review-box-card,
+[data-theme="dark"] .review-item-card,
+[data-theme="dark"] .review-empty-card {
+    background: #132620;
+    border-color: rgba(212, 162, 76, 0.25);
+}
+
+[data-theme="dark"] .review-summary-pill {
+    color: #FDFBF6;
+    background: rgba(212, 162, 76, 0.18);
+}
+
+[data-theme="dark"] .review-info-notice {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(212, 162, 76, 0.28);
+    color: #FDFBF6;
+}
+
+[data-theme="dark"] .star-rating-picker label {
+    color: rgba(255, 255, 255, 0.22);
+}
+
+[data-theme="dark"] .star-rating-picker label:hover,
+[data-theme="dark"] .star-rating-picker label:hover ~ label,
+[data-theme="dark"] .star-rating-picker input:checked ~ label {
+    color: #FACC15;
+}
+
 
 
 

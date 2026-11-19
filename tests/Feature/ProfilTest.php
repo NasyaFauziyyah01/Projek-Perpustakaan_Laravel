@@ -25,6 +25,7 @@ class ProfilTest extends TestCase
         $response->assertSee('NIP / Nomor Identitas');
         $response->assertSee('Jabatan');
         $response->assertSee('Pengelola Perpustakaan');
+        $response->assertDontSee('Kartu Anggota Perpustakaan');
     }
 
     public function test_admin_bisa_memperbarui_nip_dan_jabatan(): void
@@ -64,6 +65,8 @@ class ProfilTest extends TestCase
         $response->assertSee('NISN');
         $response->assertSee('Kelas');
         $response->assertSee('XII PPLG 1');
+        $response->assertSee('Kartu Anggota Perpustakaan');
+        $response->assertSee($anggota->getNomorAnggota());
     }
 
     public function test_anggota_bisa_memperbarui_nisn_dan_kelas(): void

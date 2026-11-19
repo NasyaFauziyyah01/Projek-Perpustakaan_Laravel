@@ -227,10 +227,16 @@
                                 </div>
 
                                 @if($loan->book)
-                                    <a href="{{ route('katalog.show', $loan->book->id) }}" class="btn-book-action btn-book-detail px-3 flex-shrink-0" style="height: 38px;">
-                                        <i class="bi bi-journal-text"></i>
-                                        <span>Lihat Buku</span>
-                                    </a>
+                                    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                                        <a href="{{ route('katalog.show', $loan->book->id) }}#ulasan-buku" class="btn-book-action btn-book-pinjam px-3 flex-shrink-0" style="height: 38px;">
+                                            <i class="bi bi-star-fill"></i>
+                                            <span>Beri Ulasan</span>
+                                        </a>
+                                        <a href="{{ route('katalog.show', $loan->book->id) }}" class="btn-book-action btn-book-detail px-3 flex-shrink-0" style="height: 38px;">
+                                            <i class="bi bi-journal-text"></i>
+                                            <span>Lihat Buku</span>
+                                        </a>
+                                    </div>
                                 @endif
                             </div>
                         </div>

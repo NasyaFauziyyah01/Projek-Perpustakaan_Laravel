@@ -6,16 +6,112 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="mb-3">
+            <div class="mb-3 no-print">
                 <a href="{{ url()->previous() !== url()->current() ? url()->previous() : (auth()->user()->isAdmin() ? route('admin.dashboard') : route('beranda')) }}" class="btn-back-nav">
                     <span class="back-nav-icon"><i class="bi bi-arrow-left"></i></span>
                     <span>Kembali</span>
                 </a>
             </div>
-            <h1 class="page-title">Profil Saya</h1>
-            <p class="page-subtitle">Kelola informasi akun Anda</p>
+            <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3 no-print">
+                <div>
+                    <h1 class="page-title mb-1">Profil Saya</h1>
+                    <p class="page-subtitle mb-0">
+                        {{ $user->isAdmin() ? 'Kelola informasi akun Anda' : 'Kelola informasi akun dan kartu anggota digital Anda' }}
+                    </p>
+                </div>
+                @if(! $user->isAdmin())
+                    <button type="button" onclick="window.print()" class="btn btn-outline-hijau btn-sm">
+                        <i class="bi bi-printer me-1"></i> Cetak / Simpan PDF Kartu
+                    </button>
+                @endif
+            </div>
 
-            <div class="card-perpus mb-4">
+            {{-- ===== KARTU ANGGOTA DIGITAL (KHUSUS SISWA / ANGGOTA) ===== --}}
+            @if(! $user->isAdmin())
+                @php
+                    $nomorKartu = $user->getNomorAnggota();
+                    $qrPayload = urlencode("LENTERA PUSTAKA | {$nomorKartu} | {$user->name} | " . ($user->nis_nip ?: '-'));
+                @endphp
+                <div class="member-id-card mb-4" id="digitalMemberCard">
+                    <div class="member-card-glow member-glow-gold" aria-hidden="true"></div>
+                    <div class="member-card-glow member-glow-emerald" aria-hidden="true"></div>
+                    <div class="member-card-ring" aria-hidden="true"></div>
+                    <div class="member-card-shimmer" aria-hidden="true"></div>
+
+                    {{-- Header Kartu --}}
+                    <div class="member-card-header">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="member-card-logo">
+                                <img src="{{ asset('images/logo-lentera-icon.png') }}" alt="Logo Lentera Pustaka">
+                            </div>
+                            <div>
+                                <div class="member-card-brand">LENTERA <span>PUSTAKA</span></div>
+                                <div class="member-card-type">Kartu Anggota Perpustakaan</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="member-status-pill {{ $user->isAktif() ? 'is-active' : 'is-inactive' }}">
+                                <span class="status-dot"></span>
+                                {{ strtoupper($user->status ?? 'aktif') }}
+                            </span>
+                        </div>
+                    </div>
+
+                    {{-- Body Kartu: Avatar + Identitas + QR Code --}}
+                    <div class="member-card-body">
+                        <div class="member-identity-group">
+                            <div class="member-avatar-ring">
+                                <span>{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                            </div>
+                            <div class="member-main-info">
+                                <div class="member-number-badge">
+                                    <i class="bi bi-upc-scan me-1"></i> {{ $nomorKartu }}
+                                </div>
+                                <h3 class="member-name" title="{{ $user->name }}">{{ $user->name }}</h3>
+                                <div class="member-email">
+                                    <i class="bi bi-envelope-fill me-1"></i>{{ $user->email }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="member-qr-box" title="QR Identitas {{ $nomorKartu }}">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&margin=4&color=162E27&bgcolor=FDFBF6&data={{ $qrPayload }}"
+                                 alt="QR {{ $nomorKartu }}"
+                                 width="74"
+                                 height="74"
+                                 onerror="this.style.display='none'; this.nextElementSibling.classList.remove('d-none');">
+                            <div class="member-qr-fallback d-none">
+                                <i class="bi bi-qr-code"></i>
+                            </div>
+                            <span class="member-qr-caption">VERIFIED ID</span>
+                        </div>
+                    </div>
+
+                    {{-- Footer Strip Metadata --}}
+                    <div class="member-card-footer">
+                        <div class="member-meta-item">
+                            <span class="member-meta-label">NISN</span>
+                            <span class="member-meta-value">{{ $user->nis_nip ?: 'Belum diisi' }}</span>
+                        </div>
+                        <div class="member-meta-item">
+                            <span class="member-meta-label">Kelas</span>
+                            <span class="member-meta-value">{{ $user->kelas ?: 'Belum diisi' }}</span>
+                        </div>
+                        <div class="member-meta-item">
+                            <span class="member-meta-label">No. Telepon</span>
+                            <span class="member-meta-value">{{ $user->no_hp ?: 'Belum diisi' }}</span>
+                        </div>
+                        <div class="member-meta-item">
+                            <span class="member-meta-label">Terdaftar</span>
+                            <span class="member-meta-value">
+                                {{ $user->created_at ? $user->created_at->translatedFormat('d M Y') : date('d M Y') }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            <div class="card-perpus mb-4 no-print">
                 <div class="card-header">
                     <i class="bi bi-person-circle me-2"></i> Informasi Profil
                 </div>
@@ -110,7 +206,7 @@
             </div>
 
             {{-- Ganti Password --}}
-            <div class="card-perpus">
+            <div class="card-perpus no-print">
                 <div class="card-header">
                     <i class="bi bi-shield-lock me-2"></i> Ganti Password
                 </div>

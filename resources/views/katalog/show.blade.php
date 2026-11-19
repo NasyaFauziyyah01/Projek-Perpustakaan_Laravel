@@ -78,6 +78,15 @@
                 @else
                     <span class="badge badge-status badge-terlambat px-3 py-2 fs-6 shadow-sm"><i class="bi bi-x-circle me-1"></i> Stok Habis</span>
                 @endif
+                <a href="#ulasan-buku" class="text-decoration-none review-summary-pill">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    @if($totalUlasan > 0)
+                        <strong>{{ number_format($rataRating, 1) }}</strong>
+                        <span>({{ $totalUlasan }} ulasan)</span>
+                    @else
+                        <span>Belum ada ulasan</span>
+                    @endif
+                </a>
                 <span style="color: var(--teks-muted);"><i class="bi bi-upc-scan me-1"></i> ISBN: {{ $book->isbn ?? '-' }}</span>
             </div>
 
@@ -116,6 +125,156 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    {{-- ===== ULASAN & RATING PEMBACA ===== --}}
+    <hr class="my-5" style="border-color: var(--cream-300);" id="ulasan-buku">
+    <div class="row g-4 mb-5">
+        {{-- Kiri: Ringkasan Rating & Form Ulasan --}}
+        <div class="col-lg-5">
+            <div class="review-box-card p-4 h-100">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div>
+                        <span class="section-badge mb-1">
+                            <span class="badge-dot-emas"></span>
+                            Suara Pembaca
+                        </span>
+                        <h4 class="fw-bold mb-0" style="font-family: var(--font-judul); color: var(--green-900);">Rating & Ulasan</h4>
+                    </div>
+                    <div class="review-score-badge text-center">
+                        <div class="score-num">{{ $totalUlasan > 0 ? number_format($rataRating, 1) : '0.0' }}</div>
+                        <div class="score-stars">
+                            @for($i = 1; $i <= 5; $i++)
+                                <i class="bi {{ $i <= round($rataRating) ? 'bi-star-fill' : 'bi-star' }}"></i>
+                            @endfor
+                        </div>
+                        <small>{{ $totalUlasan }} ulasan</small>
+                    </div>
+                </div>
+
+                @auth
+                    @if($pernahPinjam)
+                        <form action="{{ route('katalog.ulasan.simpan', $book) }}" method="POST" class="mt-3 pt-3" style="border-top: 1px dashed var(--cream-300);">
+                            @csrf
+                            <label class="form-label fw-bold mb-2" style="color: var(--green-900);">
+                                {{ $ulasanSaya ? 'Perbarui Ulasan Anda' : 'Beri Rating & Ulasan Buku Ini' }}
+                            </label>
+
+                            {{-- Pilihan Bintang Interaktif (5 ke 1 untuk efek CSS sibling hover) --}}
+                            @php
+                                $selectedRating = (int) old('rating', $ulasanSaya?->rating ?? 5);
+                            @endphp
+                            <div class="star-rating-picker mb-3">
+                                @for($star = 5; $star >= 1; $star--)
+                                    <input type="radio" id="star-{{ $star }}" name="rating" value="{{ $star }}" {{ $selectedRating === $star ? 'checked' : '' }} required>
+                                    <label for="star-{{ $star }}" title="{{ $star }} Bintang">
+                                        <i class="bi bi-star-fill"></i>
+                                    </label>
+                                @endfor
+                            </div>
+                            @error('rating')
+                                <div class="text-danger small mb-2">{{ $message }}</div>
+                            @enderror
+
+                            <div class="mb-3">
+                                <label for="ulasan" class="form-label small fw-semibold" style="color: var(--teks-lembut);">Pendapat Anda setelah membaca buku ini</label>
+                                <textarea name="ulasan" id="ulasan" rows="3" maxlength="1000" required
+                                          class="form-control @error('ulasan') is-invalid @enderror"
+                                          placeholder="Ceritakan kesan, manfaat, atau bagian menarik dari buku ini...">{{ old('ulasan', $ulasanSaya?->ulasan) }}</textarea>
+                                @error('ulasan')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <button type="submit" class="btn btn-emas w-100">
+                                <i class="bi bi-send-check me-1"></i>
+                                {{ $ulasanSaya ? 'Simpan Perubahan Ulasan' : 'Kirim Ulasan' }}
+                            </button>
+                        </form>
+                    @else
+                        <div class="review-info-notice mt-3">
+                            <i class="bi bi-journal-check fs-4"></i>
+                            <div>
+                                <strong>Ingin memberikan ulasan?</strong>
+                                <p class="mb-0 small">Ulasan hanya dapat ditulis oleh anggota yang sudah pernah atau sedang meminjam buku ini.</p>
+                            </div>
+                        </div>
+                    @endif
+                @else
+                    <div class="review-info-notice mt-3">
+                        <i class="bi bi-person-lock fs-4"></i>
+                        <div>
+                            <strong>Bagikan ulasan bacaanmu!</strong>
+                            <p class="mb-2 small">Silakan masuk dan pinjam buku ini untuk memberikan rating & ulasan.</p>
+                            <a href="{{ route('login') }}" class="btn btn-sm btn-emas">Masuk Sekarang</a>
+                        </div>
+                    </div>
+                @endauth
+            </div>
+        </div>
+
+        {{-- Kanan: Daftar Ulasan Pembaca --}}
+        <div class="col-lg-7">
+            @if($reviews->isNotEmpty())
+                <div class="d-flex flex-column gap-3">
+                    @foreach($reviews as $rev)
+                        <div class="review-item-card p-3 p-md-4">
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="review-avatar">
+                                        {{ strtoupper(substr($rev->user?->name ?? 'A', 0, 1)) }}
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold" style="color: var(--green-900); font-size: 0.95rem;">
+                                            {{ $rev->user?->name ?? 'Anggota Perpustakaan' }}
+                                            @if(auth()->id() === $rev->user_id)
+                                                <span class="badge rounded-pill ms-1" style="background: rgba(212, 162, 76, 0.2); color: var(--gold-800); font-size: 0.68rem;">Anda</span>
+                                            @endif
+                                        </div>
+                                        <div class="small" style="color: var(--teks-muted); font-size: 0.76rem;">
+                                            {{ $rev->user?->kelas ?: 'Pembaca Terverifikasi' }} &bull; {{ $rev->updated_at->diffForHumans() }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="review-item-stars" aria-label="Rating {{ $rev->rating }} dari 5">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="bi {{ $i <= $rev->rating ? 'bi-star-fill' : 'bi-star' }}"></i>
+                                        @endfor
+                                    </div>
+
+                                    @auth
+                                        @if(auth()->id() === $rev->user_id || auth()->user()->isAdmin())
+                                            <form action="{{ route('katalog.ulasan.hapus', [$book, $rev]) }}" method="POST"
+                                                  onsubmit="return confirm('Hapus ulasan ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-link text-danger p-0 ms-1" title="Hapus Ulasan">
+                                                    <i class="bi bi-trash3"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @endauth
+                                </div>
+                            </div>
+
+                            <p class="mb-0 mt-2" style="color: var(--teks-lembut); line-height: 1.7; font-size: 0.93rem; white-space: pre-line;">{{ $rev->ulasan }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="review-empty-card p-5 text-center h-100 d-flex flex-column align-items-center justify-content-center">
+                    <div class="review-empty-icon mb-3">
+                        <i class="bi bi-chat-square-quote"></i>
+                    </div>
+                    <h5 class="fw-bold mb-1" style="color: var(--green-900);">Belum Ada Ulasan</h5>
+                    <p class="mb-0" style="color: var(--teks-lembut); max-width: 380px; font-size: 0.9rem;">
+                        Jadilah pembaca pertama yang memberikan rating dan ulasan setelah membaca buku <strong>{{ $book->judul }}</strong>!
+                    </p>
+                </div>
+            @endif
         </div>
     </div>
 

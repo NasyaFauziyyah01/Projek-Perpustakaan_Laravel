@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Loan;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class KatalogController extends Controller
 {
@@ -42,7 +44,90 @@ class KatalogController extends Controller
             ->limit(4)
             ->get();
 
-        return view('katalog.show', compact('book', 'bukuTerkait'));
+        $reviews = collect();
+        if (Schema::hasTable('reviews')) {
+            $reviews = $book->reviews()
+                ->with('user')
+                ->orderByDesc('updated_at')
+                ->get();
+        }
+
+        $rataRating = $reviews->isNotEmpty() ? round((float) $reviews->avg('rating'), 1) : 0.0;
+        $totalUlasan = $reviews->count();
+
+        $pernahPinjam = auth()->check()
+            && Loan::where('user_id', auth()->id())
+                ->where('book_id', $book->id)
+                ->exists();
+
+        $ulasanSaya = auth()->check()
+            ? $reviews->firstWhere('user_id', auth()->id())
+            : null;
+
+        return view('katalog.show', compact(
+            'book',
+            'bukuTerkait',
+            'reviews',
+            'rataRating',
+            'totalUlasan',
+            'pernahPinjam',
+            'ulasanSaya',
+        ));
+    }
+
+    public function simpanUlasan(Request $request, Book $book)
+    {
+        $user = auth()->user();
+
+        $pernahPinjam = Loan::where('user_id', $user->id)
+            ->where('book_id', $book->id)
+            ->exists();
+
+        if (! $pernahPinjam) {
+            return back()->with('error', 'Anda hanya dapat memberikan ulasan pada buku yang pernah atau sedang Anda pinjam.');
+        }
+
+        $validated = $request->validate([
+            'rating' => ['required', 'integer', 'min:1', 'max:5'],
+            'ulasan' => ['required', 'string', 'min:3', 'max:1000'],
+        ], [
+            'rating.required' => 'Silakan pilih rating bintang (1 sampai 5).',
+            'rating.min' => 'Rating minimal 1 bintang.',
+            'rating.max' => 'Rating maksimal 5 bintang.',
+            'ulasan.required' => 'Isi ulasan tidak boleh kosong.',
+            'ulasan.min' => 'Ulasan minimal 3 karakter.',
+            'ulasan.max' => 'Ulasan maksimal 1000 karakter.',
+        ]);
+
+        Review::updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'book_id' => $book->id,
+            ],
+            [
+                'rating' => $validated['rating'],
+                'ulasan' => trim($validated['ulasan']),
+            ]
+        );
+
+        return redirect()
+            ->to(route('katalog.show', $book).'#ulasan-buku')
+            ->with('success', 'Ulasan Anda berhasil disimpan! Terima kasih telah berbagi pendapat.');
+    }
+
+    public function hapusUlasan(Book $book, Review $review)
+    {
+        $user = auth()->user();
+
+        if ($review->book_id !== $book->id || ($review->user_id !== $user->id && ! $user->isAdmin())) {
+            abort(403, 'Anda tidak memiliki izin untuk menghapus ulasan ini.');
+        }
+
+        $review->delete();
+
+        return redirect()
+            ->to(route('katalog.show', $book).'#ulasan-buku')
+            ->with('success', 'Ulasan berhasil dihapus.');
     }
 
     public function pinjam(Request $request, Book $book)
